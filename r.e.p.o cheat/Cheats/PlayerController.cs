@@ -110,33 +110,25 @@ namespace r.e.p.o_cheat
         }
         public static void Revive()
         {
-            var playerDeathHeadType = Type.GetType("PlayerDeathHead, Assembly-CSharp");
-            if (playerDeathHeadType != null)
-            {
-                reviveInstance = GameHelper.FindObjectOfType(playerDeathHeadType);
-                if (reviveInstance != null)
-                {
-                    Hax2.Log1("reviveInstance encontrado.");
-                }
-                else
-                {
-                    Hax2.Log1("reviveInstance é null.");
-                    return;
-                }
-            }
-            else
-            {
-                Hax2.Log1("PlayerDeathHead não encontrado.");
-                return;
-            }
-
             var enemyDirectorType = Type.GetType("EnemyDirector, Assembly-CSharp");
             if (enemyDirectorType != null)
             {
                 enemyDirectorInstance = GameHelper.FindObjectOfType(enemyDirectorType);
                 if (enemyDirectorInstance != null)
                 {
-                    Hax2.Log1("enemyDirectorInstance encontrado.");
+                    Hax2.Log1("EnemyDirector encontrado.");
+
+                    var setInvestigateMethod = enemyDirectorType.GetMethod("SetInvestigate");
+                    if (setInvestigateMethod != null)
+                    {
+                        Vector3 spawnPosition = new Vector3(0f, 1f, 0f);
+                        setInvestigateMethod.Invoke(enemyDirectorInstance, new object[] { spawnPosition, 999f });
+                        Hax2.Log1("SetInvestigate chamado com sucesso.");
+                    }
+                    else
+                    {
+                        Hax2.Log1("Método SetInvestigate não encontrado.");
+                    }
                 }
                 else
                 {
@@ -153,54 +145,66 @@ namespace r.e.p.o_cheat
             var semiFuncType = Type.GetType("SemiFunc, Assembly-CSharp");
             if (semiFuncType != null)
             {
-                enemyDirectorInstance = GameHelper.FindObjectOfType(semiFuncType);
-                if (enemyDirectorInstance != null)
+                var playerGetListMethod = semiFuncType.GetMethod("PlayerGetList", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                if (playerGetListMethod != null)
                 {
-                    Hax2.Log1("enemyDirectorInstance encontrado.");
+                    var playerList = playerGetListMethod.Invoke(null, null) as IEnumerable<object>; 
+                    if (playerList != null)
+                    {
+                        foreach (var playerAvatar in playerList)
+                        {
+                            var playerDeathHeadField = playerAvatar.GetType().GetField("playerDeathHead", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                            if (playerDeathHeadField != null)
+                            {
+                                var playerDeathHeadInstance = playerDeathHeadField.GetValue(playerAvatar);
+                                if (playerDeathHeadInstance != null)
+                                {
+                                    var inExtractionPointField = playerDeathHeadInstance.GetType().GetField("inExtractionPoint", System.Reflection.BindingFlags.NonPublic  | System.Reflection.BindingFlags.Instance);
+                                    if (inExtractionPointField != null)
+                                    {
+                                        inExtractionPointField.SetValue(playerDeathHeadInstance, true);
+                                        Hax2.Log1("inExtractionPoint definido para true.");
+                                    }
+                                    else
+                                    {
+                                        Hax2.Log1("Campo inExtractionPoint não encontrado.");
+                                    }
+
+                                    var reviveMethod = playerDeathHeadInstance.GetType().GetMethod("Revive");
+                                    if (reviveMethod != null)
+                                    {
+                                        reviveMethod.Invoke(playerDeathHeadInstance, null);
+                                        Hax2.Log1("Player revivido com sucesso.");
+                                    }
+                                    else
+                                    {
+                                        Hax2.Log1("Método Revive não encontrado.");
+                                    }
+                                }
+                                else
+                                {
+                                    Hax2.Log1("playerDeathHeadInstance é null.");
+                                }
+                            }
+                            else
+                            {
+                                Hax2.Log1("Campo playerDeathHead não encontrado.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Hax2.Log1("PlayerGetList retornou null.");
+                    }
                 }
                 else
                 {
-                    Hax2.Log1("enemyDirectorInstance é null.");
-                    return;
+                    Hax2.Log1("Método PlayerGetList não encontrado.");
                 }
             }
             else
             {
-                Hax2.Log1("EnemyDirector não encontrado.");
-                return;
-            }
-
-            var reviveMethod = reviveInstance.GetType().GetMethod("Revive");
-            var inExtractionPointMethod = reviveInstance.GetType().GetMethod("inExtractionPoint");
-            var setInvestigateMethod = enemyDirectorInstance.GetType().GetMethod("SetInvestigate");
-
-            if (setInvestigateMethod != null)
-            {
-                Hax2.Log1("SetInvestigate chamado.");
-            }
-            else
-            {
-                Hax2.Log1("Método SetInvestigate não encontrado.");
-            }
-
-            if (inExtractionPointMethod != null)
-            {
-                inExtractionPointMethod.Invoke(reviveInstance, new object[] { true });
-                Hax2.Log1("inExtractionPoint definido para true.");
-            }
-            else
-            {
-                Hax2.Log1("Método inExtractionPoint não encontrado.");
-            }
-
-            if (reviveMethod != null)
-            {
-                reviveMethod.Invoke(reviveInstance, null);
-                Hax2.Log1("Player revivido com sucesso.");
-            }
-            else
-            {
-                Hax2.Log1("Método Revive não encontrado.");
+                Hax2.Log1("SemiFunc não encontrado.");
             }
         }
 

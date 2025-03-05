@@ -117,6 +117,9 @@ namespace r.e.p.o_cheat
 
     public class Hax2 : MonoBehaviour
     {
+        private int selectedPlayerIndex = 0;
+        private List<string> playerNames = new List<string>(); 
+        private List<object> playerList = new List<object>();
         private float sliderValue = 0.5f;
         private bool showMenu = true;
         public static bool godModeActive = false;
@@ -168,7 +171,7 @@ namespace r.e.p.o_cheat
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F9))
+            if (Input.GetKeyDown(KeyCode.Delete))
             {
                 showMenu = !showMenu;
 
@@ -196,21 +199,78 @@ namespace r.e.p.o_cheat
                 }
             }
         }
+        private void UpdatePlayerList()
+        {
+            playerNames.Clear();
+            playerList.Clear();
+
+            var players = SemiFunc.PlayerGetList(); 
+
+            foreach (var player in players)
+            {
+                playerList.Add(player);
+                string playerName = SemiFunc.PlayerGetName(player) ?? "Unknown Player";
+                playerNames.Add(playerName);
+            }
+
+            if (playerNames.Count == 0)
+            {
+                playerNames.Add("No player Found");
+            }
+        }
+        private void ReviveSelectedPlayer()
+        {
+            if (selectedPlayerIndex < 0 || selectedPlayerIndex >= playerList.Count)
+            {
+                Log1("Índice de jogador inválido!");
+                return;
+            }
+
+            var selectedPlayer = playerList[selectedPlayerIndex];
+
+            var playerDeathHeadField = selectedPlayer.GetType().GetField("playerDeathHead", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (playerDeathHeadField != null)
+            {
+                var playerDeathHeadInstance = playerDeathHeadField.GetValue(selectedPlayer);
+                if (playerDeathHeadInstance != null)
+                {
+                    var inExtractionPointField = playerDeathHeadInstance.GetType().GetField("inExtractionPoint", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    var reviveMethod = playerDeathHeadInstance.GetType().GetMethod("Revive");
+
+                    if (inExtractionPointField != null)
+                    {
+                        inExtractionPointField.SetValue(playerDeathHeadInstance, true);
+                    }
+
+                    reviveMethod?.Invoke(playerDeathHeadInstance, null);
+                    Log1("Jogador revivido: " + playerNames[selectedPlayerIndex]);
+                }
+                else
+                {
+                    Log1("Instância de playerDeathHead não encontrada.");
+                }
+            }
+            else
+            {
+                Log1("Campo playerDeathHead não encontrado.");
+            }
+        }
+
 
 
         public void OnGUI()
         {
             UIHelper.ResetGrid();
 
-            GUI.Label(new Rect(10, 10, 200, 30), "DARK CHEAT | F9 - MENU");
+            GUI.Label(new Rect(10, 10, 200, 30), "DARK CHEAT | DEL - MENU");
 
             if (showMenu)
             {
                 UIHelper.ResetGrid();
-                UIHelper.Begin("DARK Menu", 50, 50, 500, 500, 30, 30, 10);
+                UIHelper.Begin("DARK Menu", 50, 50, 500, 800, 30, 30, 10);
 
-                UIHelper.Label("Press F5 to reload!", 70, 80); 
-                UIHelper.Label("Press F9 to close menu!", 225, 80); 
+                UIHelper.Label("Press F5 to reload!", 70, 80);
+                UIHelper.Label("Press DEL to close menu!", 225, 80);
                 UIHelper.Label("Press F10 to unload!", 410, 80);
 
                 if (UIHelper.Button("Heal Player", 170, 130))
@@ -229,22 +289,36 @@ namespace r.e.p.o_cheat
                 {
                     PlayerController.GodMode();
                 }
-                if (UIHelper.Button("Revive", 170, 330))
+
+                // Atualiza a lista de jogadores
+                UpdatePlayerList();
+
+                // Exibir dropdown de jogadores
+                UIHelper.Label("Select a player to Revive:", 220, 320);
+                selectedPlayerIndex = GUI.SelectionGrid(new Rect(170, 350, 272, 100), selectedPlayerIndex, playerNames.ToArray(), 1);
+
+                // Botão para reviver o jogador selecionado
+                if (UIHelper.Button("Revive", 170, 480))
                 {
-                    PlayerController.Revive();
+                    ReviveSelectedPlayer();
                 }
-                if (UIHelper.Button("Spawn Money", 170, 380))
+
+                if (UIHelper.Button("Spawn Money", 170, 530))
                 {
                     DebugCheats.SpawnItem();
                 }
 
-                UIHelper.Label("Speed Value " + sliderValue, 170, 430);
-                sliderValue = UIHelper.Slider(sliderValue, 1f, 30f, 170, 450); 
+                UIHelper.Label("Speed Value " + sliderValue, 170, 580);
+                sliderValue = UIHelper.Slider(sliderValue, 1f, 30f, 170, 600);
 
-                // Restante do código de controles
-                if (UIHelper.Button("Set Speed", 170, 470))
+                if (UIHelper.Button("Set Speed", 170, 620))
                 {
                     PlayerController.RemoveSpeed(sliderValue);
+                }
+
+                if (UIHelper.Button("Enemy ESP", 170, 670))
+                {
+                    DebugCheats.DrawESP();
                 }
             }
 
