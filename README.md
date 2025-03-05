@@ -1,7 +1,8 @@
 # r.e.p.o-cheat
 Basic C# Mono cheat for a new lethal like game called R.E.P.O
 
-![jlW8YBH](https://github.com/user-attachments/assets/fa46e617-f33f-4b7d-a852-da97b2dff6c5)
+![Screenshot_2](https://github.com/user-attachments/assets/a160715e-a109-497c-9a68-d16a061e6aa6)
+
 
 # **FUNCTIONS (still working on, i will release new versions whenever i add functions):**
 - Heal Player<br />
