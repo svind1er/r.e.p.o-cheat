@@ -15,6 +15,8 @@ namespace r.e.p.o_cheat
         private static int debugCurrentColumn = 0;
         private static int debugCurrentRow = 0;
 
+
+
         public static void Begin(string text, float _x, float _y, float _width, float _height, float _margin, float _controlHeight, float _controlDist)
         {
             x = _x;
@@ -117,6 +119,9 @@ namespace r.e.p.o_cheat
 
     public class Hax2 : MonoBehaviour
     {
+        private float nextUpdateTime = 0f; // Tempo da próxima atualização
+        private const float updateInterval = 5f; // Intervalo de 5 segundos
+
         private int selectedPlayerIndex = 0;
         private List<string> playerNames = new List<string>(); 
         private List<object> playerList = new List<object>();
@@ -171,6 +176,16 @@ namespace r.e.p.o_cheat
 
         public void Update()
         {
+            if (Time.time >= nextUpdateTime)
+            {
+                DebugCheats.UpdateEnemyList();
+                Hax2.Log1("Lista de inimigos atualizada!");
+                nextUpdateTime = Time.time + updateInterval; // Define o próximo update
+            }
+            if (DebugCheats.drawEspBool)
+            {
+                DebugCheats.DrawESP();
+            }
             if (Input.GetKeyDown(KeyCode.Delete))
             {
                 showMenu = !showMenu;
@@ -318,7 +333,14 @@ namespace r.e.p.o_cheat
 
                 if (UIHelper.Button("Enemy ESP", 170, 670))
                 {
-                    DebugCheats.DrawESP();
+                    if (DebugCheats.drawEspBool)
+                    {
+                        DebugCheats.drawEspBool = false;
+                    } else
+                    if (!DebugCheats.drawEspBool)
+                    {
+                        DebugCheats.drawEspBool = true;
+                    }
                 }
             }
 
