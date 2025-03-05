@@ -9,14 +9,18 @@ Basic C# Mono cheat for a new lethal like game called R.E.P.O
 - Damage Player<br />
 - Infinite Health<br />
 - God Mode<br />
-- Revive (NOT WORKING YET)<br />
+- Revive Selected Player<br />
 - Spawn MoneyBag<br />
 - Change Speed
+- Enemy Esp
+- Infinity Stamina
+- Send Selected Player To Void (not working yet)
+- -Kill ALl Enemies
+- Kill Selected Player (not working yet)
 
 # **TO-DO:**
 
 - Item ESP <br />
-- Enemy ESP<br />
 - Player ESP<br />
 - Player Nickname<br />
 - Player RGB Skin<br />
@@ -25,9 +29,6 @@ Basic C# Mono cheat for a new lethal like game called R.E.P.O
 - Change Jump Delay<br />
 - Change Crouch Delay<br />
 - Get All Upgrade Items<br />
-- Kill All Players<br />
-- Teleport To Limbo<br />
-- Kill All Enemies<br />
 - Change Upgrades Numbers<br />
 - Complete Mission
 
