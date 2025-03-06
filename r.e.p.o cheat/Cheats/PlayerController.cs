@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Threading;
+using System.Threading;
 namespace r.e.p.o_cheat
 {
     static class PlayerController
@@ -107,7 +108,9 @@ namespace r.e.p.o_cheat
                     Hax2.Log1("MoveSpeed field not found in PlayerController.");
                 }
             }
+            Thread.Sleep(1);
         }
+        /* revive that works
         public static void Revive()
         {
             var enemyDirectorType = Type.GetType("EnemyDirector, Assembly-CSharp");
@@ -205,6 +208,65 @@ namespace r.e.p.o_cheat
             else
             {
                 Hax2.Log1("SemiFunc não encontrado.");
+            }
+        }*/
+        public static void SendFirstPlayerToVoid()
+        {
+            var playerController = Type.GetType("PlayerController, Assembly-CSharp");
+            if (playerController != null)
+            {
+                var playerControllerInstance = GameHelper.FindObjectOfType(playerController);
+                {
+                    if (playerControllerInstance != null)
+                    {
+                        Hax2.Log1("reviveInstance n é null.");
+                        var damageMethod1 = playerControllerInstance.GetType().GetMethod("Revive");
+                        if (damageMethod1 != null)
+                        {
+                            Vector3 spawnPosition = new Vector3(-9999f, -9999f, -99999f);
+                            damageMethod1.Invoke(spawnPosition, new object[] { });
+                            Hax2.Log1("Player Sent to Void");
+                        } else
+                        {
+                            Hax2.Log1("piroquinha null");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Hax2.Log1("reviveInstance null");
+            }
+        }
+        public static void MaxStamina()
+        {
+            var playerControllerType = Type.GetType("PlayerController, Assembly-CSharp");
+            if (playerControllerType != null)
+            {
+                Hax2.Log1("PlayerController found.");
+
+                var playerControllerInstance = GameHelper.FindObjectOfType(playerControllerType);
+                if (playerControllerInstance != null)
+                {
+                        var energyCurrentField = playerControllerInstance.GetType().GetField("EnergyCurrent", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                        if (energyCurrentField != null)
+                        {
+                            energyCurrentField.SetValue(playerControllerInstance, 999999);
+                            Hax2.Log1("EnergyCurrent set to " + 999999);
+                        }
+                        else
+                        {
+                            Hax2.Log1("EnergyCurrent field not found in playerAvatarScript.");
+                        }
+                }
+                else
+                {
+                    Hax2.Log1("playerControllerInstance not found.");
+                }
+            }
+            else
+            {
+                Hax2.Log1("PlayerController type not found.");
             }
         }
 
