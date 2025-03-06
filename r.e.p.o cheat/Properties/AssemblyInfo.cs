@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // conjunto de atributos. Altere estes valores de atributo para modificar as informações
 // associada a um assembly.
 [assembly: AssemblyTitle("r.e.p.o cheat")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Made by D4rkks")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("https://github.com/D4rkks/")]
 [assembly: AssemblyProduct("r.e.p.o cheat")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
