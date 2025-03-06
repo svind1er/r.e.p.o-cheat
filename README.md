@@ -1,7 +1,7 @@
 # r.e.p.o-cheat
 Basic C# Mono cheat for a new lethal like game called R.E.P.O
 
-![Screenshot_4](https://github.com/user-attachments/assets/a9a6d18d-cfa8-4189-9cd2-044c21eb8917)
+![image](https://github.com/user-attachments/assets/cff61d52-2845-4fe9-972e-2da0b9f18a1b)
 
 # **FUNCTIONS (still working on, i will release new versions whenever i add functions):**
 - Heal Player<br />
@@ -14,7 +14,7 @@ Basic C# Mono cheat for a new lethal like game called R.E.P.O
 - Enemy Esp (not optimized yet but working)
 - Infinity Stamina
 - Send Selected Player To Void (not working yet)
-- -Kill ALl Enemies
+- Kill ALl Enemies
 - Kill Selected Player (not working yet)
 
 # **TO-DO:**
